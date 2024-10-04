@@ -2,3 +2,5 @@
 /isodir
 *.bin
 *.iso
+*.o
+/isoroot
