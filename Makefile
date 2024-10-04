@@ -8,14 +8,14 @@ TARGET := i686-elf
 CC ?= $(ARCH)-gcc
 AS ?= $(ARCH)-as
 
-CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc
-LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib
-ASFLAGS = 
-
 SRCDIR = src
 ARCHDIR = $(SRCDIR)/kernel/arch/$(ARCH)
 BUILDDIR = build
 ISODIR = isodir
+
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc
+LDFLAGS = -T $(ARCHDIR)/linker.ld -ffreestanding -O2 -nostdlib
+ASFLAGS = 
 
 ISO = radiance.iso
 KERNELBIN = kernel.bin
