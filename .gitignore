@@ -1,5 +1,6 @@
 /.vscode
 /bin
-/image.iso
+/*.iso
 /iso_root
 /obj
+/limine
