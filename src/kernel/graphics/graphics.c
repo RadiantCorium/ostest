@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "font.h"
+#include "kernel/io/serial.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -33,6 +34,7 @@ uint64_t pixelwidth = NULL;
 void clearScreen(int color)
 {
     fillrect(0, 0, framebuffer->width, framebuffer->height, color);
+    
 }
 
 void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor)
@@ -46,7 +48,7 @@ void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor)
     {
         for (cy = 0; cy < 8; cy++)
         {
-            set = bmp[cx] << cy & 1;
+            set = bmp[cx] & 1  << cy;
             putpixel(x + cx, y + cx, set ? fgcolor : bgcolor);
         }
     }

@@ -1,6 +1,6 @@
 #include "serial.h"
 #include "io.h"
-#include "lib/string.h"
+#include <string.h>
 
 int initSerial()
 {

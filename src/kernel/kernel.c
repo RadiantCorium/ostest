@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include <limine.h>
 
-#include"lib/graphics/graphics.h"
-#include"lib/io/serial.h"
+#include"kernel/graphics/graphics.h"
+#include"kernel/io/serial.h"
 
 // Set the base revision to 2, the latest base revision described by the Limine boot protocol specification.
 __attribute__((used, section(".requests")))
