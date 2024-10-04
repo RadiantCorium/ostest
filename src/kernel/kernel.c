@@ -16,5 +16,5 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    term_writestring("Hello world");
+    term_writestring("Hello world\nNew line test");
 }

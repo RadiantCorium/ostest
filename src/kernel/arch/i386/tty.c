@@ -44,6 +44,12 @@ void term_putentryat(char c, uint8_t color, size_t x, size_t y)
 
 void term_putchar(char c)
 {
+    if (c == '\n')
+    {
+        term_row++;
+        term_column = 0;
+        return;
+    }
     term_putentryat(c, term_color, term_column, term_row);
     if (++term_column == VGA_WIDTH)
     {

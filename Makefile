@@ -33,6 +33,9 @@ iso: all
 	cp grub.cfg isoroot/boot/grub/grub.cfg
 	grub-mkrescue -o $(ISO_NAME) isoroot
 
+qemu: iso
+	qemu-system-$(ARCH) -cdrom radiance.iso
+
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
