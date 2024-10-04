@@ -1,6 +1,8 @@
 # Project RADIANCE
 idk i might write smth here at some point lol
 
+This project literally just started so nothing works yet
+
 ## Building
 It is recommended to build this project on a Linux environment. Other operating systems are untested.
 
