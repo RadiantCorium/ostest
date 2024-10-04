@@ -7,6 +7,8 @@ This project literally just started so nothing works yet
 It is recommended to build this project on a Linux environment. Other operating systems are untested.
 
 1. Create a [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler)
+    - Currently Supported Targets:
+        - i686-elf
 2. Install other required packages:
     - **make** (To run the Makefile)
     - **xorriso** (To create the ISO file)
