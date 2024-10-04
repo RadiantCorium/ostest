@@ -1,63 +1,45 @@
-# Target architecture.
-# i386 by default
-ARCH ?= i386
+# Settings
+ARCH := i386
 
-include src/kernel/arch/$(ARCH)/make.config
+SRC_DIR := src
+KERNEL_DIR := $(SRC_DIR)/kernel
+ARCH_DIR := $(KERNEL_DIR)/arch/$(ARCH)
+ISO_NAME := radiance.iso
 
-TARGET := i686-elf
-CC ?= $(ARCH)-gcc
-AS ?= $(ARCH)-as
-
-SRCDIR = src
-ARCHDIR = $(SRCDIR)/kernel/arch/$(ARCH)
-BUILDDIR = build
-ISODIR = isodir
-
-CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc
-LDFLAGS = -T $(ARCHDIR)/linker.ld -ffreestanding -O2 -nostdlib
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc -I./src/kernel/include
+CPPFLAGS = -D__is_kernel -Iinclude
+LDFLAGS = -ffreestanding -O2
 ASFLAGS = 
+LIBS = -nostdlib -lgcc
 
-ISO = radiance.iso
-KERNELBIN = kernel.bin
+include $(ARCH_DIR)/make.config
 
-CSRC = $(wildcard $(SRCDIR)/**/*.c) $(wildcard $(ARCHDIR)/**/*.c)
-ASMSRC = $(wildcard $(SRCDIR)/**/*.s) $(wildcard $(ARCHDIR)/**/*.s)
+SRC_FILES := $(wildcard $(SRC_DIR)/kernel/*.c) $(wildcard $(SRC_DIR)/libc/*.c)
+ASM_FILES := $(wildcard $(SRC_DIR)/kernel/*.s) $(wildcard $(SRC_DIR)/libc/*.c)
 
-OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(CSRC)) \
-	$(patsubst $(SRCDIR)/%.s,$(BUILDDIR)/%.o,$(ASMSRC))
+ARCH_SRC_FILES := $(wildcard $(ARCH_DIR)/*.c)
+ARCH_ASM_FILES := $(wildcard $(ARCH_DIR)/*.s)
 
-all: $(ISO)
+LINKER_SCRIPT = $(ARCH_DIR)/linker.ld
 
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+OBJS := $(SRC_FILES:.c=.o) $(ASM_FILES:.s:.o) $(ARCH_SRC_FILES:.c=.o) $(ARCH_ASM_FILES:.s=.o)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(OBJS)
+	$(CC) -T $(LINKER_SCRIPT) -o kernel.bin $(OBJS) $(LDFLAGS) $(LIBS)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.s | $(BUILDDIR)
-	mkdir -p $(dir $@)
-	$(AS) $(ASFLAGS) $< -o $@
+iso: all
+	mkdir -p isoroot/boot/grub
+	cp kernel.bin isoroot/boot/kernel.bin
+	cp grub.cfg isoroot/boot/grub/grub.cfg
+	grub-mkrescue -o $(ISO_NAME) isoroot
 
-$(KERNELBIN): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) -lgcc
+%.o: %.c
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
-$(ISODIR)/boot/grub/grub.cfg: grub.cfg
-	mkdir -p $(ISODIR)/boot/grub
-	cp $< $(ISODIR)/boot/grub/grub.cfg
-
-$(ISODIR)/boot/$(KERNELBIN): $(KERNELBIN)
-	mkdir -p $(ISODIR)/boot
-	cp $< $(ISODIR)/boot/$(KERNELBIN)
-
-$(ISO): $(ISODIR)/boot/grub/grub.cfg $(ISODIR)/boot/$(KERNELBIN)
-	grub-mkrescue -o $@ $(ISODIR)
-
-qemu: $(ISO)
-	qemu-system-i386 -cdrom $(ISO)
+%.o: %.s
+	$(AS) $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 clean:
-	rm -rf $(BUILDDIR) $(KERNELBIN) $(ISODIR) $(ISO)
+	rm -f $(OBJS) kernel.bin isoroot $(ISO_NAME)
 
-
-.PHONY: all clean qemu
+.PHONY: all iso clean
