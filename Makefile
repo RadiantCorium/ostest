@@ -6,8 +6,9 @@ KERNEL_DIR := $(SRC_DIR)/kernel
 ARCH_DIR := $(KERNEL_DIR)/arch/$(ARCH)
 ISO_NAME := radiance.iso
 
-CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc -I./src/kernel/include
-CPPFLAGS = -D__is_kernel -Iinclude
+CFLAGS = -ffreestanding -O2 -Wall -Wextra
+CPPFLAGS = -D__is_kernel
+INCLUDES = -I./src/libc -I./src/kernel/include -Iinclude
 LDFLAGS = -ffreestanding -O2
 ASFLAGS = 
 LIBS = -nostdlib -lgcc
@@ -37,10 +38,10 @@ qemu: iso
 	qemu-system-$(ARCH) -cdrom radiance.iso
 
 %.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(LIBS)
 
 %.o: %.s
-	$(AS) $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	$(AS) $< -o $@
 
 clean:
 	rm -f $(OBJS) kernel.bin isoroot $(ISO_NAME)
