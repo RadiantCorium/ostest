@@ -1,20 +1,27 @@
+# Target architecture.
+# i386 by default
+ARCH ?= i386
+
+include src/kernel/arch/$(ARCH)/make.config
+
 TARGET := i686-elf
-CC = $(TARGET)-gcc
-AS = $(TARGET)-as
+CC ?= $(ARCH)-gcc
+AS ?= $(ARCH)-as
 
 CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc
 LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib
 ASFLAGS = 
 
 SRCDIR = src
+ARCHDIR = $(SRCDIR)/kernel/arch/$(ARCH)
 BUILDDIR = build
 ISODIR = isodir
 
 ISO = radiance.iso
 KERNELBIN = kernel.bin
 
-CSRC = $(wildcard $(SRCDIR)/**/*.c)
-ASMSRC = $(wildcard $(SRCDIR)/**/*.s)
+CSRC = $(wildcard $(SRCDIR)/**/*.c) $(wildcard $(ARCHDIR)/**/*.c)
+ASMSRC = $(wildcard $(SRCDIR)/**/*.s) $(wildcard $(ARCHDIR)/**/*.s)
 
 OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(CSRC)) \
 	$(patsubst $(SRCDIR)/%.s,$(BUILDDIR)/%.o,$(ASMSRC))
