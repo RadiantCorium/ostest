@@ -48,14 +48,29 @@ void term_putchar(char c)
     {
         term_row++;
         term_column = 0;
-        return;
     }
     term_putentryat(c, term_color, term_column, term_row);
     if (++term_column == VGA_WIDTH)
     {
         term_column = 0;
-        if (++term_row == VGA_HEIGHT)
-            term_row = 0;
+        term_row++;
+    }
+
+    if (term_row == VGA_HEIGHT)
+    {
+        // Shift everyhing up by one and discard the top row
+        for (size_t i = 0; i < VGA_HEIGHT; i++)
+        {
+            for (size_t j = 0; j < VGA_WIDTH; j++)
+            {
+                const size_t index = i * VGA_WIDTH + j;
+                const size_t indexDn = i+1 * VGA_WIDTH + j;
+                term_buffer[index] = term_buffer[indexDn];
+                if (i == VGA_HEIGHT)
+                    term_buffer[index] = ' ';
+            }
+        }
+        term_row = VGA_HEIGHT - 1;
     }
 }
 

@@ -16,5 +16,20 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    term_writestring("Hello world\nNew line test");
+    int i = 0;
+
+    while (1)
+    {
+        if (i == 50000000)
+            term_writestring("\nOne");
+        if (i == 100000000)
+            term_writestring("\nTwo");
+        if (i == 150000000)
+        {
+            term_writestring("\nThree");
+            i = 0;
+        }
+
+        i++;
+    }
 }
