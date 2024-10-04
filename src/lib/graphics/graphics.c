@@ -38,14 +38,16 @@ void clearScreen(int color)
 void drawchar(unsigned char c, int x, int y, int fgcolor, int bgcolor)
 {
     int cx,cy;
-    int mask[8]={1,2,4,8,16,32,64,128};
-    unsigned char *glyph=builtin_font+(int)c*16;
+    int set;
 
-    for (cy = 0; cy < 16; cy++)
+    char *bmp = font8x8_basic[c];
+
+    for (cx = 0; cx < 8; cx++)
     {
-        for (cx = 0; cx < 8; cx++)
+        for (cy = 0; cy < 8; cy++)
         {
-            putpixel(x-cx, y+cy-12, glyph[cy]&mask[cx]?fgcolor:bgcolor);
+            set = bmp[cx] << cy & 1;
+            putpixel(x + cx, y + cx, set ? fgcolor : bgcolor);
         }
     }
 }

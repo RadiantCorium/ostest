@@ -2,7 +2,9 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <limine.h>
-#include"lib/graphics.h"
+
+#include"lib/graphics/graphics.h"
+#include"lib/io/serial.h"
 
 // Set the base revision to 2, the latest base revision described by the Limine boot protocol specification.
 __attribute__((used, section(".requests")))
@@ -21,60 +23,6 @@ static volatile LIMINE_REQUESTS_START_MARKER;
 __attribute__((used, section(".requests_end_maker")))
 static volatile LIMINE_REQUESTS_END_MARKER;
 
-// implement required GCC and Clang stuff so shit won't break
-void *memcpy(void *dest, const void *src, size_t n) {
-    uint8_t *pdest = (uint8_t *)dest;
-    const uint8_t *psrc = (const uint8_t *)src;
-
-    for (size_t i = 0; i < n; i++) {
-        pdest[i] = psrc[i];
-    }
-
-    return dest;
-}
-
-void *memset(void *s, int c, size_t n) {
-    uint8_t *p = (uint8_t *)s;
-
-    for (size_t i = 0; i < n; i++)
-    {
-        p[i] = (uint8_t)c;
-    }
-
-    return s;
-}
-
-void *memmove(void *dest, const void *src, size_t n) {
-    uint8_t *pdest = (uint8_t *) dest;
-    const uint8_t *psrc = (const uint8_t *)src;
-
-    if (src > dest) {
-        for (size_t i = 0; i < n; i++) {
-            pdest[i] = psrc[i];
-        }
-    } else if (src < dest) {
-        for (size_t i = n; i > 0; i--)
-        {
-            pdest[i-1] = psrc[i-1];
-        }
-    }
-
-    return dest;
-}
-
-int memcmp(const void *s1, const void *s2, size_t n) {
-    const uint8_t *p1 = (const uint8_t *)s1;
-    const uint8_t *p2 = (const uint8_t *)s2;
-
-    for (size_t i = 0; i < n; i++) {
-        if (p1[i] != p2[i]) {
-            return p1[i] < p2[i] ? -1 : 1;
-        }
-    }
-
-    return 0;
-}
-
 // Halt and catch fire function
 static void hcf(void) {
     for (;;) {
@@ -84,16 +32,30 @@ static void hcf(void) {
 
 // Kernel entry point
 void kmain(void) {
+    initSerial();
+
+    writeSerialString("Serial port initialized!\n");
+
+    writeSerialString("Checking Limine base revision...");
+
     // Ensure the bootloader actually understands our base revision
     if (LIMINE_BASE_REVISION_SUPPORTED == false) {
         hcf();
     }
+
+    writeSerialString("\t\tGood!\n");
+
+    writeSerialString("Checking for framebuffer...");
 
     // Ensure we have a framebuffer
     if (framebuffer_request.response == NULL
     ||  framebuffer_request.response->framebuffer_count < 1) {
         hcf();
     }
+
+    writeSerialString("\t\tGood!\n");
+
+    writeSerialString("Initializing framebuffer...");
 
     // Fetch the first framebuffer
     //struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
@@ -102,9 +64,11 @@ void kmain(void) {
 
     pixelwidth = (framebuffer->bpp/8);
 
+    writeSerialString("\t\tGood!\n");
+
     // clearScreen(0xAAAAAA);
 
-    drawchar('S', 160, 160, 0xFFFFFF, 0x000000);
+    drawchar('A', 0, 0, 0xFFFFFF, 0x000000);
 
     // we're done. halt.
     //asm volatile ("1: jmp 1b");
