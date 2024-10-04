@@ -2,7 +2,7 @@ TARGET := i686-elf
 CC = $(TARGET)-gcc
 AS = $(TARGET)-as
 
-CFLAGS = -ffreestanding -O2 -Wall -Wextra
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -I./src/libc
 LDFLAGS = -T linker.ld -ffreestanding -O2 -nostdlib
 ASFLAGS = 
 

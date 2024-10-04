@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "../libc/string.h"
+#include <string.h>
 
 // Prevent stuff from working if we're not using a cross compiler.
 #if defined(__linux__)
