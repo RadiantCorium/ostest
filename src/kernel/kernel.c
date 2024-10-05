@@ -6,6 +6,7 @@
 
 #include <kernel/tty.h>
 #include <kernel/serial.h>
+#include <kernel/log.h>
 
 // Prevent stuff from working if we're not using a cross compiler.
 #if defined(__linux__)
@@ -17,24 +18,30 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    term_writestring("TTY Initialized!\n");
+    //term_writestring("TTY Initialized!\n");
+
+    kprintl("TTY Initialized!", LOG_SYSTEM);
 
     int hasSerial = 1;
 
-    term_writestring("Initializing COM1 (0x3F8) Serial Port for debugging...");
+    kwritel("Initializing COM1 (0x3F8) Serial Port for debugging...", LOG_SYSTEM);
     if (initSerial(0x3F8) == 1)
     {
-        term_writestring("FAIL!\n");
+        kprint("FAIL!", 0x04);
         hasSerial = 0;
     }
     else
     {
-        term_writestring("OK!\n");
-        term_writestring("Routing TTY output to Serial...");
+        kprint("OK!", 0x02);
+        kwritel("Routing TTY output to Serial...", LOG_SYSTEM);
         term_setSerial(0x3F8);
-        term_writestring("OK!\n");
+        kprint("OK!", 0x02);
     }
-    term_writestring("Serial initialization finished!\n");
+    kprintl("Serial initialization finished!", LOG_INFO);
     if (hasSerial == 0)
-        term_writestring("NOTE: Debugging through COM1 port is unavailable!\n");
+        kprintl("NOTE: Debugging through COM1 port is unavailable!", LOG_WARN);
+
+    kprintl("Loading GDT...", LOG_SYSTEM);
+    kprintl("Disabling interrupts...\n", LOG_SYSTEM);
+    __asm__ volatile ("cli");
 }

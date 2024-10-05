@@ -26,3 +26,13 @@ size_t strlen(const char *str)
         len++;
     return len;
 }
+
+char *strcat(char *dest, const char *src)
+{
+    char *rdest = dest;
+
+    while (*dest)
+        dest++;
+    while (*dest++ = *src++);
+    return dest;
+}
