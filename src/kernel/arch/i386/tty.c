@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
+
+#include <libk/string.h>
 
 #include <kernel/tty.h>
 #include <kernel/serial.h>
@@ -68,7 +69,7 @@ void term_putchar(char c)
     }
 
     if (term_row >= VGA_HEIGHT) {
-        memmove(term_buffer, term_buffer + (VGA_WIDTH), (VGA_HEIGHT) * VGA_WIDTH * 2);
+        kmemmove(term_buffer, term_buffer + (VGA_WIDTH), (VGA_HEIGHT) * VGA_WIDTH * 2);
 
         for (size_t x = 0; x < VGA_WIDTH; x++) {
             size_t index = (VGA_HEIGHT - 1) * VGA_WIDTH + x;
@@ -88,7 +89,7 @@ void term_write(const char *data, size_t size)
 
 void term_writestring(const char *data)
 {
-    term_write(data, strlen(data));
+    term_write(data, kstrlen(data));
 }
 
 void term_setSerial(uint16_t port)

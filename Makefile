@@ -9,14 +9,14 @@ ISO_NAME := radiance.iso
 CFLAGS = -ffreestanding -O2 -Wall -Wextra
 CPPFLAGS = -D__is_kernel
 INCLUDES = -I./src/libc -I./src/kernel/include -Iinclude
-LDFLAGS = -ffreestanding -O2
+LDFLAGS = -ffreestanding -O2 -Wl,-Map=linkermap.map -g
 ASFLAGS = 
 LIBS = -nostdlib -lgcc
 
 include $(ARCH_DIR)/make.config
 
-SRC_FILES := $(wildcard $(SRC_DIR)/kernel/*.c) $(wildcard $(SRC_DIR)/libc/*.c)
-ASM_FILES := $(wildcard $(SRC_DIR)/kernel/*.s) $(wildcard $(SRC_DIR)/libc/*.c)
+SRC_FILES := $(wildcard $(SRC_DIR)/kernel/*.c) $(wildcard $(SRC_DIR)/libc/*.c) $(wildcard $(SRC_DIR)/kernel/include/libk/*.c)
+ASM_FILES := $(wildcard $(SRC_DIR)/kernel/*.s) $(wildcard $(SRC_DIR)/libc/*.c) $(wildcard $(SRC_DIR)/kernel/include/libk/*.s)
 
 ARCH_SRC_FILES := $(wildcard $(ARCH_DIR)/*.c)
 ARCH_ASM_FILES := $(wildcard $(ARCH_DIR)/*.s)

@@ -1,6 +1,6 @@
-#include <string.h>
+#include <libk/string.h>
 
-void *memmove(void *dstptr, const void *srcptr, size_t size)
+void *kmemmove(void *dstptr, const void *srcptr, size_t size)
 {
     unsigned char *dst = (unsigned char *)dstptr;
     const unsigned char *src = (const unsigned char *)srcptr;
@@ -19,7 +19,7 @@ void *memmove(void *dstptr, const void *srcptr, size_t size)
     return dstptr;
 }
 
-size_t strlen(const char *str)
+size_t kstrlen(const char *str)
 {
     size_t len = 0;
     while (str[len])
@@ -27,7 +27,7 @@ size_t strlen(const char *str)
     return len;
 }
 
-char *strcat(char *dest, const char *src)
+char *kstrcat(char *dest, const char *src)
 {
     char *rdest = dest;
 

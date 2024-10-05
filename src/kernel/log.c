@@ -1,6 +1,5 @@
 #include <kernel/log.h>
 #include <kernel/tty.h>
-#include <string.h>
 
 void kwritel(const char *msg, enum logLevel lvl)
 {

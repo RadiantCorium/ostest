@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <string.h>
+#include <libk/string.h>
 
 #include <kernel/tty.h>
 #include <kernel/serial.h>

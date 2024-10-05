@@ -1,5 +1,6 @@
 *.bin
 *.iso
 *.o
+*.map
 /isoroot
 /.vscode
