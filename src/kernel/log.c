@@ -31,7 +31,7 @@ void kwritel(const char *msg, enum logLevel lvl)
 void kprintl(char *msg, enum logLevel lvl)
 {
     kwritel(msg, lvl);
-    kwrite("\n", 0x0F);
+    kwrite("\n\r", 0x0F);
 }
 
 void kwrite(const char *msg, int color)
@@ -44,5 +44,5 @@ void kwrite(const char *msg, int color)
 void kprint(char *msg, int color)
 {
     kwrite(msg, color);
-    kwrite("\n", color);
+    kwrite("\n\r", color);
 }

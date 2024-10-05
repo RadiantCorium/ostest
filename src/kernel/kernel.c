@@ -42,6 +42,5 @@ void kernel_main(void)
         kprintl("NOTE: Debugging through COM1 port is unavailable!", LOG_WARN);
 
     kprintl("Loading GDT...", LOG_SYSTEM);
-    kprintl("Disabling interrupts...\n", LOG_SYSTEM);
     __asm__ volatile ("cli");
 }

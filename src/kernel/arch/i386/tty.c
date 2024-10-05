@@ -5,6 +5,7 @@
 
 #include <kernel/tty.h>
 #include <kernel/serial.h>
+#include <kernel/io.h>
 
 #include "vga.h"
 
@@ -49,12 +50,24 @@ void term_putentryat(char c, uint8_t color, size_t x, size_t y)
 void term_putchar(char c)
 {
     int isSpecial = 0;
-    if (c == '\n')
+    
+    switch (c)
     {
-        term_row++;
-        term_column = 0;
-        isSpecial = 1;
+        case '\n':
+            term_row++;
+            isSpecial = 1;
+            break;
+        case '\r':
+            term_column = 0;
+            isSpecial = 1;
+            break;
+        case '\b':
+            term_column--;
+            term_putentryat(' ', term_color, term_column, term_row);
+            isSpecial = 1;
+            break;
     }
+    
     if (isSpecial == 0)
     {
         term_putentryat(c, term_color, term_column, term_row);
@@ -85,6 +98,7 @@ void term_write(const char *data, size_t size)
 {
     for (size_t i = 0; i < size; i++)
         term_putchar(data[i]);
+    term_setcursor(term_column, term_row);
 }
 
 void term_writestring(const char *data)
@@ -95,4 +109,14 @@ void term_writestring(const char *data)
 void term_setSerial(uint16_t port)
 {
     term_serialPort = port;
+}
+
+void term_setcursor(int x, int y)
+{
+	uint16_t pos = y * VGA_WIDTH + x;
+
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, (uint8_t) (pos & 0xFF));
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
