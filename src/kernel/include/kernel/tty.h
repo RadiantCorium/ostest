@@ -2,6 +2,9 @@
 #define TTY_H
 
 #include <stddef.h>
+#include <stdint.h>
+
+void term_setSerial(uint16_t port);
 
 void term_init(void);
 void term_putchar(char c);

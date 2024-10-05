@@ -3,11 +3,14 @@
 #include <string.h>
 
 #include <kernel/tty.h>
+#include <kernel/serial.h>
 
 #include "vga.h"
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
+
+uint16_t term_serialPort = 0;
 
 size_t term_row;
 size_t term_column;
@@ -54,6 +57,8 @@ void term_putchar(char c)
     if (isSpecial == 0)
     {
         term_putentryat(c, term_color, term_column, term_row);
+        if (term_serialPort != 0)
+            writeSerial(term_serialPort, c);
         term_column++;
     }
     if (term_column == VGA_WIDTH)
@@ -84,4 +89,9 @@ void term_write(const char *data, size_t size)
 void term_writestring(const char *data)
 {
     term_write(data, strlen(data));
+}
+
+void term_setSerial(uint16_t port)
+{
+    term_serialPort = port;
 }

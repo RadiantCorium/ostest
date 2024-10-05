@@ -26,7 +26,7 @@ LINKER_SCRIPT = $(ARCH_DIR)/linker.ld
 OBJS := $(SRC_FILES:.c=.o) $(ASM_FILES:.s:.o) $(ARCH_SRC_FILES:.c=.o) $(ARCH_ASM_FILES:.s=.o)
 
 all: $(OBJS)
-	$(CC) -T $(LINKER_SCRIPT) -o kernel.bin $(OBJS) $(LDFLAGS) $(LIBS)
+	$(CC) -T $(LINKER_SCRIPT) -o kernel.bin $(OBJS) $(LDFLAGS) $(LIBS) $(INCLUDES)
 
 iso: all
 	mkdir -p isoroot/boot/grub
@@ -44,6 +44,7 @@ qemu: iso
 	$(AS) $< -o $@
 
 clean:
-	rm -f $(OBJS) kernel.bin isoroot $(ISO_NAME)
+	rm -f $(OBJS) kernel.bin $(ISO_NAME)
+	rm -rf isoroot
 
 .PHONY: all iso clean
