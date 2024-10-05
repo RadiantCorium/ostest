@@ -44,14 +44,19 @@ void term_putentryat(char c, uint8_t color, size_t x, size_t y)
 
 void term_putchar(char c)
 {
+    int isSpecial = 0;
     if (c == '\n')
     {
         term_row++;
         term_column = 0;
+        isSpecial = 1;
     }
-    if (term_column != 0)
+    if (isSpecial == 0)
+    {
         term_putentryat(c, term_color, term_column, term_row);
-    if (++term_column == VGA_WIDTH)
+        term_column++;
+    }
+    if (term_column == VGA_WIDTH)
     {
         term_column = 0;
         term_row++;
@@ -66,6 +71,7 @@ void term_putchar(char c)
         }
 
         term_row--;
+        term_column = 0;
     }
 }
 

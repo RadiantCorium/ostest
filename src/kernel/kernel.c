@@ -16,20 +16,7 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    int i = 0;
+    term_writestring("TTY Initialized!\n");
 
-    while (1)
-    {
-        if (i == 50000000)
-            term_writestring("\nOne");
-        if (i == 100000000)
-            term_writestring("\nTwo");
-        if (i == 150000000)
-        {
-            term_writestring("\nThree");
-            i = 0;
-        }
-
-        i++;
-    }
+    term_writestring("Initializing COM1 serial port for debugging...");
 }
