@@ -57,10 +57,10 @@ void term_putchar(char c)
     if (isSpecial == 0)
     {
         term_putentryat(c, term_color, term_column, term_row);
-        if (term_serialPort != 0)
-            writeSerial(term_serialPort, c);
         term_column++;
     }
+    if (term_serialPort != 0)
+            writeSerial(term_serialPort, c);
     if (term_column == VGA_WIDTH)
     {
         term_column = 0;
