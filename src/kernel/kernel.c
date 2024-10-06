@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include <libk/string.h>
+#include <libk/stdio.h>
 
 #include <kernel/tty.h>
 #include <kernel/serial.h>
@@ -43,4 +44,6 @@ void kernel_main(void)
 
     kprintl("Loading GDT...", LOG_SYSTEM);
     __asm__ volatile ("cli");
+
+    kprintf("Test of printf: %s %d %c", "String", 1312, 'T');
 }
