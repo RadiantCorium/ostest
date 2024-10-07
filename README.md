@@ -17,4 +17,4 @@ It is recommended to build this project on a Linux environment. Other operating 
     - **grub-common** (to set up the GRUB bootloader)
     - **grub-pc-bin** (to set up the GRUB bootloader)
     - **qemu** (to test the OS, other VMs work but the makefile is designed to launch QEMU)
-2. Run ``make`` in the root directors of the project (Alternatively run ``make qemu`` to build and then load the project in qemu.)
+2. Run ``make iso`` in the root directors of the project to create an ISO file (Alternatively run ``make qemu`` to build and then load the project in qemu.)
