@@ -6,7 +6,7 @@ This project literally just started so nothing works yet
 Before contributing, please read [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Building
-It is recommended to build this project on a Linux environment. Other operating systems are untested.
+It is recommended to build this project on a Linux environment. Other environments are untested.
 
 1. Create a [GCC Cross-Compiler](https://wiki.osdev.org/GCC_Cross-Compiler)
     - Currently Supported Targets:
