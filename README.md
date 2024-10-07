@@ -3,6 +3,8 @@ idk i might write smth here at some point lol
 
 This project literally just started so nothing works yet
 
+Before contributing, please read [CONTRIBUTING.md](./CONTRIBUTING.md)
+
 ## Building
 It is recommended to build this project on a Linux environment. Other operating systems are untested.
 
