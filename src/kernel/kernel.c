@@ -19,8 +19,6 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    //term_writestring("TTY Initialized!\n");
-
     kprintl("TTY Initialized!", LOG_SYSTEM);
 
     int hasSerial = 1;
