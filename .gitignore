@@ -4,3 +4,4 @@
 *.map
 /isoroot
 /.vscode
+/build

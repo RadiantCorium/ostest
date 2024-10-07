@@ -23,28 +23,39 @@ ARCH_ASM_FILES := $(wildcard $(ARCH_DIR)/*.s)
 
 LINKER_SCRIPT = $(ARCH_DIR)/linker.ld
 
-OBJS := $(SRC_FILES:.c=.o) $(ASM_FILES:.s:.o) $(ARCH_SRC_FILES:.c=.o) $(ARCH_ASM_FILES:.s=.o)
+# OBJS := $(SRC_FILES:.c=.o) $(ASM_FILES:.s:.o) $(ARCH_SRC_FILES:.c=.o) $(ARCH_ASM_FILES:.s=.o)
+OBJS := $(patsubst $(SRC_DIR)/%.c, build/obj/%.o, $(SRC_FILES)) \
+		$(patsubst $(SRC_DIR)/%.s, build/obj/%.o, $(ASM_FILES)) \
+		$(patsubst $(ARCH_DIR)/%.c, build/obj/arch/%.o, $(ARCH_SRC_FILES)) \
+		$(patsubst $(ARCH_DIR)/%.c, build/obj/arch/%.o, $(ARCH_ASM_FILES)) \
 
 all: $(OBJS)
-	$(CC) -T $(LINKER_SCRIPT) -o kernel.bin $(OBJS) $(LDFLAGS) $(LIBS) $(INCLUDES)
+	$(CC) -T $(LINKER_SCRIPT) -o build/kernel.bin $(OBJS) $(LDFLAGS) $(LIBS) $(INCLUDES)
 
 iso: all
 	mkdir -p isoroot/boot/grub
-	cp kernel.bin isoroot/boot/kernel.bin
+	cp build/kernel.bin isoroot/boot/kernel.bin
 	cp grub.cfg isoroot/boot/grub/grub.cfg
 	grub-mkrescue -o $(ISO_NAME) isoroot
 
 qemu: iso
 	qemu-system-$(ARCH) -cdrom radiance.iso
 
-%.o: %.c
+build/obj/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(LIBS)
-
-%.o: %.s
+build/obj/%.o: $(SRC_DIR)/%.s
+	mkdir -p $(dir $@)
+	$(AS) $< -o $@
+build/obj/arch/%.o: $(ARCH_DIR)/%.c
+	mkdir -p $(dir $@)
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(LIBS)
+build/obj/arch/%.o: $(ARCH_DIR)/%.s
+	mkdir -p $(dir $@)
 	$(AS) $< -o $@
 
 clean:
-	rm -f $(OBJS) kernel.bin $(ISO_NAME)
-	rm -rf isoroot
+	rm -f $(ISO_NAME) linkermap.map
+	rm -rf isoroot build
 
 .PHONY: all iso clean
