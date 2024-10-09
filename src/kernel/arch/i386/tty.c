@@ -92,6 +92,8 @@ void term_putchar(char c)
         term_row--;
         term_column = 0;
     }
+
+    term_setcursor(term_column, term_row);
 }
 
 void term_write(const char *data, size_t size)

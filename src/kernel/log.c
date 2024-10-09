@@ -1,48 +1,33 @@
 #include <kernel/log.h>
 #include <kernel/tty.h>
 
-void kwritel(const char *msg, enum logLevel lvl)
-{
-    if (lvl != LOG_NONE || !lvl)
-    {
-        kwrite("[", 0x0F);
-        switch (lvl)
-        {
-            case LOG_INFO:
-                kwrite("INFO", 0x03);
-                break;
-            case LOG_SYSTEM:
-                kwrite("SYSTEM", 0x05);
-                break;
-            case LOG_WARN:
-                kwrite("WARN", 0x0E);
-                break;
-            case LOG_ERROR:
-                kwrite("ERROR", 0x04);
-                break;
-            default:
-                break;
-        }
-        kwrite("]: ", 0x0F);
-    }
-    kwrite(msg, 0x0F);
-}
+#include <libk/stdio.h>
 
-void kprintl(char *msg, enum logLevel lvl)
-{
-    kwritel(msg, lvl);
-    kwrite("\n\r", 0x0F);
-}
+// TODO: Add a way to process ANSI sequences so we don't have to call kprintf 3 times.
 
-void kwrite(const char *msg, int color)
+void klog(const char *msg)
 {
-    term_setcolor(color);
-    term_writestring(msg);
+    kprintf("[");
+    term_setcolor(0x03);
+    kprintf("LOG");
     term_setcolor(0x0F);
+    kprintf("]: %s\n\r", msg);
 }
 
-void kprint(char *msg, int color)
+void kwarn(const char *msg)
 {
-    kwrite(msg, color);
-    kwrite("\n\r", color);
+    kprintf("[");
+    term_setcolor(0x0E);
+    kprintf("WARN");
+    term_setcolor(0x0F);
+    kprintf("]: %s\n\r", msg);
+}
+
+void kerror(const char *msg)
+{
+    kprintf("[");
+    term_setcolor(0x04);
+    kprintf("ERROR");
+    term_setcolor(0x0F);
+    kprintf("]: %s\n\r", msg);
 }

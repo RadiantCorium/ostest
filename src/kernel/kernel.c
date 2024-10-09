@@ -19,29 +19,30 @@ void kernel_main(void)
     // Initialize the terminal interface
     term_init();
 
-    kprintl("TTY Initialized!", LOG_SYSTEM);
+    term_setcolor(0x0F);
+
+    klog("TTY Initialized!");
+
+    kprintf("\n\r===SERIAL INITIALIZATION===\n\r");
 
     int hasSerial = 1;
 
-    kwritel("Initializing COM1 (0x3F8) Serial Port for debugging...", LOG_SYSTEM);
+    klog("Initializing COM1 (0x3F8) Serial Port for debugging...");
     if (initSerial(0x3F8) == 1)
     {
-        kprint("FAIL!", 0x04);
+        kerror("COM1 Serial Chip test FAILED!");
         hasSerial = 0;
     }
     else
     {
-        kprint("OK!", 0x02);
-        kwritel("Routing TTY output to Serial...", LOG_SYSTEM);
+        klog("Routing TTY output to Serial...");
         term_setSerial(0x3F8);
-        kprint("OK!", 0x02);
     }
-    kprintl("Serial initialization finished!", LOG_INFO);
+    klog("Serial initialization finished!");
     if (hasSerial == 0)
-        kprintl("NOTE: Debugging through COM1 port is unavailable!", LOG_WARN);
+        kwarn("NOTE: Debugging through COM1 port is unavailable!");
 
-    kprintl("Loading GDT...", LOG_SYSTEM);
-    __asm__ volatile ("cli");
+    kprintf("\n\r===MMU INITIALIZATION===\n\r");
 
-    kprintf("Test of printf: %s %d %c", "String", 1312, 'T');
+    
 }
