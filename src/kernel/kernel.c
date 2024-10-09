@@ -25,8 +25,6 @@ void kernel_main(void)
 
     klog("TTY Initialized!");
 
-    kpanic("Test");
-
     kprintf("\n\r===SERIAL INITIALIZATION===\n\r");
 
     int hasSerial = 1;
@@ -48,5 +46,5 @@ void kernel_main(void)
 
     kprintf("\n\r===MMU INITIALIZATION===\n\r");
 
-    
+    kpanic("This is an intentional test.");    
 }

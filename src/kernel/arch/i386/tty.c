@@ -106,6 +106,12 @@ void term_setSerial(uint16_t port)
     term_serialPort = port;
 }
 
+void term_setpos(int x, int y)
+{
+    term_column = x;
+    term_row = y;
+}
+
 void term_setcursor(int x, int y)
 {
 	uint16_t pos = y * VGA_WIDTH + x;

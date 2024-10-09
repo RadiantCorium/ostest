@@ -20,11 +20,11 @@ void kpanic(const char *msg)
     term_setcolor(0x4F);
     term_clear();
 
-    term_setcursor(0, -1);
+    term_setpos(0, 0);
 
     kprintf("UNRECOVERABLE EXCEPTION (KERNEL PANIC)\n\n\r");
 
-    kprintf("P_ERRMSG: %s\n\n\r", msg);
+    kprintf("\"%s\"\n\n\r", msg);
 
     // TODO: Add padding to prinf %x
     kprintf("REGISTER DUMP:\n\r");
