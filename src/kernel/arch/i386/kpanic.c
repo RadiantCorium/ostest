@@ -1,6 +1,3 @@
-#ifndef KPANIC_I386_H
-#define KPANIC_I386_H
-
 #include <kernel/tty.h>
 #include <kernel/kpanic.h>
 
@@ -39,5 +36,3 @@ void kpanic(const char *msg)
     for (;;)
         asm ("hlt");
 }
-
-#endif
