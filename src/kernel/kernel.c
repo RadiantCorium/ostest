@@ -11,9 +11,11 @@
 
 #include <kernel/kpanic.h>
 
-// Architecture-specific includes
-#ifdef ARCH_i386
-#include "arch/i386/kpanic.h"
+// Architecture specific includes
+#if defined ARCH_i386
+#include "arch/i386/include/kpanic.h"
+#else
+#error "Current architecture includes not implemented."
 #endif
 
 // Prevent stuff from working if we're not using a cross compiler.
