@@ -86,6 +86,7 @@ int kprintf(const char *__restrict format, ...)
                 break;
             case 'd':
             case 'i':
+            {
                 format++;
 
                 int n = va_arg(parameters, int);
@@ -95,6 +96,45 @@ int kprintf(const char *__restrict format, ...)
                 len = kstrlen(bfr);
 
                 break;
+            }
+            case 'x':
+            case 'X':
+            {
+                static int isCapital;
+
+                if (*format == 'X')
+                    isCapital = 1;
+                else
+                    isCapital = 0;
+
+                format++; 
+
+                int n = va_arg(parameters, int);
+
+                len = 0;
+
+                do
+                {
+                    int digit = n & 0xF;
+                    if (digit < 10)
+                        bfr[len++] = '0' + digit;
+                    else
+                        bfr[len++] = (isCapital ? 'A' : 'a') + (digit - 10);
+                    n >>= 4; 
+                } while (n);
+
+                if (len == 0)
+                    bfr[len++] = '0';
+
+                bfr[len] = '\0';
+
+                for (int i = 0; i < len / 2; i++)
+                {
+                    char tmp = bfr[i];
+                    bfr[i] = bfr[len - i - 1];
+                    bfr[len - i - 1] = tmp;
+                }
+            }
         }
 
         if (maxrem < len)

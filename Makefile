@@ -7,7 +7,7 @@ ARCH_DIR := $(KERNEL_DIR)/arch/$(ARCH)
 ISO_NAME := radiance.iso
 
 CFLAGS = -ffreestanding -O2 -Wall -Wextra
-CPPFLAGS = -D__is_kernel
+CPPFLAGS = -D__is_kernel -DARCH_$(ARCH)
 INCLUDES = -I./src/libc -I./src/kernel/include -Iinclude
 LDFLAGS = -ffreestanding -O2 -Wl,-Map=linkermap.map -g
 ASFLAGS = 

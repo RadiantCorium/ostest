@@ -38,3 +38,22 @@ _start:
 1:  hlt
     jmp 1b
 .size _start, . - _start
+
+.section .text
+.global capture_registers
+.type capture_registers, @function
+capture_registers:
+    pusha
+    movl 4(%esp), %eax
+    movl %edi, 0(%eax)
+    movl %esi, 4(%eax)
+    movl %ebp, 8(%eax)
+    movl %esp, 12(%eax)
+    movl %ebx, 16(%eax)
+    movl %edx, 20(%eax)
+    movl %ecx, 24(%eax)
+    movl %eax, 28(%eax)
+
+    popa
+    ret
+.size capture_registers, . - capture_registers

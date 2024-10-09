@@ -26,14 +26,7 @@ void term_init(void)
     term_color = vga_entry_color(VGA_COLOR_LIGHT_GRAY, VGA_COLOR_BLACK);
     term_buffer = (uint16_t *)0xB8000;
 
-    for (size_t y = 0; y < VGA_HEIGHT; y++)
-    {
-        for (size_t x = 0; x < VGA_WIDTH; x++)
-        {
-            const size_t index = y * VGA_WIDTH + x;
-            term_buffer[index] = vga_entry(' ', term_color);
-        }
-    }
+    term_clear();
 }
 
 void term_setcolor(uint8_t color)
@@ -121,4 +114,16 @@ void term_setcursor(int x, int y)
 	outb(0x3D5, (uint8_t) (pos & 0xFF));
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+void term_clear()
+{
+    for (size_t y = 0; y < VGA_HEIGHT; y++)
+    {
+        for (size_t x = 0; x < VGA_WIDTH; x++)
+        {
+            const size_t index = y * VGA_WIDTH + x;
+            term_buffer[index] = vga_entry(' ', term_color);
+        }
+    }
 }
