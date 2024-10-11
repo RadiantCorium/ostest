@@ -45,6 +45,4 @@ void kernel_main(void)
         kwarn("NOTE: Debugging through COM1 port is unavailable!");
 
     kprintf("\n\r===MMU INITIALIZATION===\n\r");
-
-    kpanic(KPANIC_TEST);
 }

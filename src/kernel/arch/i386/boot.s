@@ -26,7 +26,7 @@ The bootloader will jump here once the kernel has been loaded. Cannot return fro
 .type _start, @function
 _start:
     /* We are now in 32-bit protected mode. All safeguards are disabled and the kernel has full control over the machine. */
-    
+
     /* set the esp register to point to the top of the stack to set it up */
     mov $stack_top, %esp
 
