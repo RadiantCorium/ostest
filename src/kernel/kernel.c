@@ -46,5 +46,5 @@ void kernel_main(void)
 
     kprintf("\n\r===MMU INITIALIZATION===\n\r");
 
-    kpanic("This is an intentional test.");    
+    kpanic(KPANIC_TEST);
 }

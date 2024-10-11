@@ -3,7 +3,17 @@
 
 typedef struct registers_t registers_t;
 
-void kpanic(const char *msg);
+enum ERRCODE {
+    KPANIC_TEST,
+};
+
+void kpanic(enum ERRCODE code);
 extern void capture_registers(registers_t *regs);
+
+typedef struct StackFrame
+{
+    struct StackFrame *ebp;
+    void *returnAddress;
+} StackFrame;
 
 #endif

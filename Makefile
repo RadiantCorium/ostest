@@ -6,8 +6,8 @@ KERNEL_DIR := $(SRC_DIR)/kernel
 ARCH_DIR := $(KERNEL_DIR)/arch/$(ARCH)
 ISO_NAME := radiance.iso
 
-CFLAGS = -ffreestanding -O2 -Wall -Wextra
-CPPFLAGS = -D__is_kernel -DARCH_$(ARCH)
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -fno-omit-frame-pointer
+CPPFLAGS = -D__is_kernel -DARCH_$(ARCH) -DARCHS="\"$(ARCH)\""
 INCLUDES = -I./src/libc -I./src/kernel/include -Iinclude
 LDFLAGS = -ffreestanding -O2 -Wl,-Map=linkermap.map -g
 ASFLAGS = 

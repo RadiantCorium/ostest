@@ -134,6 +134,19 @@ int kprintf(const char *__restrict format, ...)
                     bfr[i] = bfr[len - i - 1];
                     bfr[len - i - 1] = tmp;
                 }
+
+                break;
+            }
+            case 'p':
+            {
+                format++;
+
+                void *ptr = va_arg(parameters, void *);
+
+                kitoa((unsigned int)(uintptr_t)ptr, bfr, 16);
+                len = kstrlen(bfr);
+
+                break;
             }
         }
 
