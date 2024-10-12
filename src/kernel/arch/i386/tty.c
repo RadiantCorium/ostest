@@ -59,6 +59,10 @@ void term_putchar(char c)
             term_putentryat(' ', term_color, term_column, term_row);
             isSpecial = 1;
             break;
+        case '\t':
+            term_column += 2;
+            isSpecial = 1;
+            break;
     }
     
     if (isSpecial == 0)
