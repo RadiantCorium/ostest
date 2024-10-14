@@ -1,10 +1,10 @@
 #include <kernel/gdt.h>
 #include <kernel/log.h>
 
-void encodeGdtEntry(uint8_t *target, struct GDT source)
+void encodeGdtEntry(uint8_t *target, struct SegmentDescriptor32 source)
 {
     // Check the limit to make sure that it can be encoded
-    if (source.limit > 0xFFFFF) {kerror("GDT cannot encode limits larger than 0xFFFFF");}
+    if (source.limit > 0xFFFFF) {kerror("SegmentDescriptor32 cannot encode limits larger than 0xFFFFF");}
     
     // Encode the limit
     target[0] = source.limit & 0xFF;

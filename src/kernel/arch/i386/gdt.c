@@ -2,7 +2,7 @@
 
 void loadGDT(uint8_t table[])
 {
-    struct GDT gdt = {0, 0, 0, 0};
+    struct SegmentDescriptor32 gdt = {0, 0, 0, 0};
 
     table[0] = 0x0000;
 

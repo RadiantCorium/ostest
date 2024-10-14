@@ -49,7 +49,7 @@ void kernel_main(void)
     kprintf("\n\r===GDT INITIALIZATION===\n\r");
     uint8_t gdt[5];
     loadGDT(gdt);
-    klog("GDT LOADED!\b");
+    klog("GDT LOADED!");
     kprintf("\tGDT Base = 0x%p\n\r", &gdt);
     kprintf("\tGDT Limit = 0x%X\n\r", sizeof(gdt) - 1);
     for (size_t i = 0; i < sizeof(gdt) / sizeof(gdt[0]); i++)
@@ -68,4 +68,7 @@ void kernel_main(void)
     klog("GDT Initialization finished!");
 
     kprintf("\n\r===IDT INITIALIZATION===\n\r");
+    uint8_t idt[5];
+	loadIDT(idt);
+	klog("IDT LOADED!");
 }
