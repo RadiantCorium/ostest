@@ -8,7 +8,11 @@
 #include <kernel/tty.h>
 #include <kernel/serial.h>
 #include <kernel/log.h>
+
 #include <kernel/gdt.h>
+
+#include <kernel/idt.h>
+#include <kernel/pic.h>
 
 #include <kernel/kpanic.h>
 
@@ -17,7 +21,7 @@
 #error "You are not using a cross-compiler."
 #endif
 
-void kernel_main(void)
+void kernel_init(void)
 {
     // Initialize the terminal interface
     term_init();
@@ -46,15 +50,21 @@ void kernel_main(void)
     if (hasSerial == 0)
         kwarn("NOTE: Debugging through COM1 port is unavailable!");
 
+    asm volatile ("cli");
+
+    // I hate this
     kprintf("\n\r===GDT INITIALIZATION===\n\r");
-    uint8_t gdt[5];
+    extern uint32_t gdt[10];
     loadGDT(gdt);
     klog("GDT LOADED!");
     kprintf("\tGDT Base = 0x%p\n\r", &gdt);
     kprintf("\tGDT Limit = 0x%X\n\r", sizeof(gdt) - 1);
-    for (size_t i = 0; i < sizeof(gdt) / sizeof(gdt[0]); i++)
+    
+    kprintf("\tgdt[0] = 0x%X 0x%X\n\r", gdt[0], gdt[1]);
+    
+    for (size_t i = 2; i < sizeof(gdt) / sizeof(gdt[0]); i+=2)
     {
-        kprintf("\tgdt[%d] = 0x%X\n\r", i, gdt[i]);
+        kprintf("\tgdt[%d] = 0x%X 0x%X\n\r", i, gdt[i], gdt[i+1]);
     }
 
     if (gdt[0] != 0)
@@ -63,12 +73,37 @@ void kernel_main(void)
         return;
     }
 
+    klog("Reloading Segment Registers...");
+    reloadSegments();
+
     setGdt(sizeof(gdt) - 1, (uint32_t) &gdt);
 
     klog("GDT Initialization finished!");
 
-    kprintf("\n\r===IDT INITIALIZATION===\n\r");
-    uint8_t idt[5];
-	loadIDT(idt);
-	klog("IDT LOADED!");
+    asm volatile ("1: jmp 1b");
+
+    kprintf("\n\r===INTERRUPT INITIALIZATION===\n\r");
+    void *idtPtr;
+    #ifdef ARCH_i386
+    uint32_t idt[512];
+    setIdt(sizeof(idt) - 1, (uint32_t) &idt);
+	klog("IDT CREATED!");
+    kprintf("\tIDT Base = 0x%p\n\r", &idt);
+    kprintf("\tIDT Limit = 0x%X\n\r", sizeof(idt) - 1);
+    idtPtr = (void*)idt;
+    #else
+    
+    #endif
+
+    klog("Remapping PIC...");
+    PIC_remap(0x20, 0x28);
+
+    klog("Filling IDT...");
+    fillIdt(idtPtr);
+
+    klog("Setting PIC Mask...");
+    IRQ_clearMask(0x21);
+
+    klog("Sending Interrupt 0x21...");
+    asm volatile ("INT $0x21");
 }

@@ -39,7 +39,7 @@ iso: all
 	grub-mkrescue -o $(ISO_NAME) isoroot
 
 qemu: iso
-	qemu-system-$(ARCH) -cdrom radiance.iso
+	qemu-system-$(ARCH) -cdrom radiance.iso -serial stdio -no-reboot -no-shutdown
 
 build/obj/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)

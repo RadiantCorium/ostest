@@ -19,6 +19,20 @@ stack_bottom:
 .skip 16384 # 16KiB
 stack_top:
 
+.section .data
+.global gdt
+gdt:
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+    .long 0
+
 /* _start is the entry point of the kernel.
 The bootloader will jump here once the kernel has been loaded. Cannot return from this function as the bootloader is gone. */
 .section .text
@@ -31,7 +45,7 @@ _start:
     mov $stack_top, %esp
 
     /* Enter the high-level kernel */
-    call kernel_main
+    call kernel_init
 
     /* If we somehow end up here (kernel returns) put the computer into an infinite loop */
     cli
