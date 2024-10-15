@@ -83,9 +83,11 @@ void kernel_init(void)
 
     // asm volatile ("1: jmp 1b");
 
+    // Disregard everything down here for now
+    // I was working on interrupts when i realized that my GDT is sad
     kprintf("\n\r===INTERRUPT INITIALIZATION===\n\r");
     void *idtPtr;
-    #ifdef ARCH_i386
+    #if defined ARCH_i386
     uint32_t idt[512];
     setIdt(sizeof(idt) - 1, (uint32_t) &idt);
 	klog("IDT CREATED!");
