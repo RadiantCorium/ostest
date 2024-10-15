@@ -17,10 +17,12 @@
 .align 16
 stack_bottom:
 .skip 16384 # 16KiB
+.global stack_top
 stack_top:
 
 .section .data
 .global gdt
+.align 16
 gdt:
     .long 0
     .long 0

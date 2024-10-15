@@ -21,6 +21,8 @@
 #error "You are not using a cross-compiler."
 #endif
 
+extern uint32_t gdt[10];
+
 void kernel_init(void)
 {
     // Initialize the terminal interface
@@ -54,7 +56,6 @@ void kernel_init(void)
 
     // I hate this
     kprintf("\n\r===GDT INITIALIZATION===\n\r");
-    extern uint32_t gdt[10];
     loadGDT(gdt);
     klog("GDT LOADED!");
     kprintf("\tGDT Base = 0x%p\n\r", &gdt);
@@ -73,14 +74,14 @@ void kernel_init(void)
         return;
     }
 
+    setGdt(sizeof(gdt) - 1, (uint32_t) &gdt);
+
     klog("Reloading Segment Registers...");
     reloadSegments();
 
-    setGdt(sizeof(gdt) - 1, (uint32_t) &gdt);
-
     klog("GDT Initialization finished!");
 
-    asm volatile ("1: jmp 1b");
+    // asm volatile ("1: jmp 1b");
 
     kprintf("\n\r===INTERRUPT INITIALIZATION===\n\r");
     void *idtPtr;

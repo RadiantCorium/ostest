@@ -36,7 +36,12 @@ reloadSegments:
     mov %ax, %es
     mov %ax, %fs
     mov %ax, %gs
+
+    mov $0x10, %ax
     mov %ax, %ss
+
+    mov $stack_top, %esp
+    
     ret
 
 .section .text

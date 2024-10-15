@@ -1,5 +1,6 @@
 #include <kernel/gdt.h>
 
+// This god damn GDT has provided me more pain than i wish to admit
 void loadGDT(uint32_t table[])
 {
     struct SegmentDescriptor32 gdt = {0, 0, 0, 0};
